@@ -1,6 +1,7 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
+#include "structs.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -63,5 +64,8 @@ bool is_part_of_single_line_comment(const std::string& str, size_t end_pos);
 
 // Функция для нахождения всех позиций начала однострочных комментариев
 std::vector<size_t> find_comment_positions(const std::string& str);
+
+// Функция, создающая текстовое представление ошибки для вывода в консоль
+std::string convert_error_to_str(const Error& error);
 
 #endif // FUNCTIONS_H

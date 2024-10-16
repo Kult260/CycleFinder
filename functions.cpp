@@ -1,4 +1,5 @@
 #include "functions.h"
+#include "structs.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -519,6 +520,52 @@ std::vector< std::list<int> > replace_vertex_numbers_with_corresponding_vertices
     }
 
     return graph_adjacency_list_with_vertex_numbers;
+}
+
+// Функция, создающая текстовое представление ошибки для вывода в консоль
+std::string convert_error_to_str(const Error& error)
+{
+    std::string error_text;
+
+    //Выбрать текстовое представление ошибки из перечня по ее коду(типу)
+    switch (error.type)
+    {
+    case INVALID_OPEN_FILE:
+        error_text = "\nНеверно указан файл с входными данными. Возможно, файл не существует.";
+        break;
+    case INVALID_KEYWORD:
+        error_text = "\nНеверно указанно ключевое слово графа или оно отсутствует. Возможно, допущена ошибка в ключевом слове или оно отсутствует.";
+        break;
+    case INVALID_HEADER:
+        error_text = "\nВо входном файле отсутствует имя графа или оно содержит недопустимые символы.";
+        break;
+    case INVALID_CURLY_BRACES:
+        error_text = "\nГраницы, в которых описан граф, не определены. Возможно, во входном файле отсутствует одна из фигурных скобок или она расположена не на отдельной строке.";
+        break;
+    case INVALID_SPACE_BETWEEN_HEADING_AND_CURLY_BRACKET:
+        error_text = "\nВ промежутке между строкой с ключевым словом и именем графа и строкой с первой фигурной скобкой содержатся лишние символы.";
+        break;
+    case INVALID_COMMUNICATION_BETWEEN_VERTICES:
+        error_text = "\nВ одной из строк, описывающих связи графа, входного файла содержится более двух вершин или содержатся лишние символы.\nСтрока:" + std::to_string(error.line_num) + ".";
+        break;
+    case INVALID_VERTICE_NAME_OR_SYMBOLS:
+        error_text = "\nОписание графа содержит недопустимые символы или недопустимое имя вершины в одной из строк в описании графа.\nСтрока:" + std::to_string(error.line_num) + ".";
+        break;
+    case SEMOLON_IS_MISSING:
+        error_text = "\nВ одной из строк с описанием графа не определено окончание. Возможно, в строке отсутствует символ точки с запятой.\nСтрока:" + std::to_string(error.line_num) + ".";
+        break;
+    case INVALID_CONNECTION_SIGN:
+        error_text = "\nВ графе содержится неопознанная связь. В одной из строк с описанием графа связь между вершинами отсутствует либо указана некорректно.\nСтрока:" + std::to_string(error.line_num) + ".";
+        break;
+    case INVALID_SYMBOLS_AFTER_GRAPH_DESCRIPTION:
+        error_text = "\nПосле описания графа обнаружена лишняя запись. В файле должно содержаться описание только одного графа.";
+        break;
+    case INVALID_SAVE_FILE:
+        error_text = "\nНе удалось сохранить файл для записи результата. Возможно, путь для сохранения или имя файла указаны некорректно.";
+        break;
+    }
+
+    return error_text;
 }
 
 
