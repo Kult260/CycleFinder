@@ -16,6 +16,43 @@
 #include <QString>
 #include <QDebug>
 
+// Функция для поиска конца подстроки, которая не является однострочным комментарием
+size_t searching_for_substring_that_is_not_comment(const std::string& input_str, const std::string& substr, size_t start_pos)
+{
+    size_t begin_substr_pos = input_str.find(substr, start_pos);
+
+    // Находим позицию, на которой кончается подстрока
+    size_t end_pos = begin_substr_pos + substr.size();
+
+    // Считаем, что изначально подстрока является частью однострочного комментария
+    bool comment_flag = true;
+
+    // Иначе если начало подстроки было найдено
+    if (begin_substr_pos != std::string::npos)
+    {
+        // Проверяем подстроку на принадлежность к однострочному комментарию
+        comment_flag = is_part_of_single_line_comment(input_str, end_pos);
+
+        // Если подстрока является частью комментария и ее конец был найден
+        if (comment_flag)
+        {
+            // Продолжить поиск подстроки, которая не является однострочным комментарием в еще непроверенной части текста
+            searching_for_substring_that_is_not_comment(input_str, substr, end_pos);
+        }
+
+        // Иначе считать конец подстроки найденным
+        else
+        {
+            return end_pos;
+        }
+    }
+
+    else
+    {
+        return std::string::npos;
+    }
+}
+
 // Функция для составления списка связей, которые повторяются в нескольких циклах
 std::set< std::pair<int, int> > find_repeated_arc_in_cycles(const std::vector< std::list<int> >& list_with_simple_cycles)
 {

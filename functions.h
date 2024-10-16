@@ -55,4 +55,7 @@ void remove_whitespace_except_new_line(std::string& graph_in_Dot);
 // Функция для составления списка связей, которые повторяются в нескольких циклах
 std::set< std::pair<int, int> > find_repeated_arc_in_cycles(const std::vector< std::list<int> >& list_with_simple_cycles);
 
+// Функция для поиска конца подстроки, которая не является однострочным комментарием
+size_t searching_for_substring_that_is_not_comment(const std::string& str, const std::string& substr, size_t start_pos);
+
 #endif // FUNCTIONS_H
