@@ -49,4 +49,7 @@ std::vector< std::list<int> > replace_vertex_numbers_with_corresponding_vertices
 // Функция, выполняющая покраску для связей из соответствующих циклов в указанном графе
 void perform_coloring_for_vertices_from_the_corresponding_cycles_in_graph(std::string& graph_in_Dot, const std::vector<std::list<int>>& list_with_simple_cycles);
 
+// Функция для удаления всех символов пропусков, кроме символа переноса строки, не затрагивая однострочные комментарии
+void remove_whitespace_except_new_line(std::string& graph_in_Dot);
+
 #endif // FUNCTIONS_H

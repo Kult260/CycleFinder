@@ -16,6 +16,56 @@
 #include <QString>
 #include <QDebug>
 
+// Функция для удаления всех символов пропусков, кроме символа переноса строки, не затрагивая однострочные комментарии в описании графа
+void remove_whitespace_except_new_line(std::string& graph_in_Dot)
+{
+    bool in_comment_flag = false; // Флаг, указывающий, находимся ли мы в однострочном комментарии
+    std::string new_graph_in_Dot;     // Строка для хранения результата
+
+    // Для каждого символа входной строки
+    for (size_t num_of_current_char = 0; num_of_current_char < graph_in_Dot.size(); ++num_of_current_char)
+    {
+
+        // Если найдено начало однострочного комментария
+        if (!in_comment_flag && num_of_current_char + 1 < graph_in_Dot.size() && graph_in_Dot[num_of_current_char] == '/' && graph_in_Dot[num_of_current_char + 1] == '/')
+        {
+
+            // Считать, что мы в комментарии
+            in_comment_flag = true;
+
+            // Добавить заголовок комментария в строку
+            new_graph_in_Dot += graph_in_Dot[num_of_current_char];
+            new_graph_in_Dot += graph_in_Dot[num_of_current_char + 1];
+
+            //Перейти к содержимому однострочного комментария
+            ++num_of_current_char;
+        }
+
+        // Иначе если конец однострочного комментария
+        else if (in_comment_flag && graph_in_Dot[num_of_current_char] == '\n')
+        {
+            // Считать, что мы не в комментарии
+            in_comment_flag = false;
+
+            // Добавить символ переноса строки в результат
+            new_graph_in_Dot += graph_in_Dot[num_of_current_char];
+        }
+
+        // Иначе если текущий символ внутри однострочного комментария или является символом-пропуском или является символом переноса
+        else if (in_comment_flag || graph_in_Dot[num_of_current_char] == '\n' || !isspace(graph_in_Dot[num_of_current_char]))
+        {
+            // Добавить текущий символ в результат
+            new_graph_in_Dot += graph_in_Dot[num_of_current_char];
+        }
+    }
+
+    // Добавить удаленный пробел между ключевым словом и именем графа
+    new_graph_in_Dot.replace(new_graph_in_Dot.find("digraph"), 7, "digraph ");
+
+    // Обновить исходную строку
+    graph_in_Dot = new_graph_in_Dot;
+}
+
 // Функция, выполняющая покраску для связей из соответствующих циклов в указанном графе
 void perform_coloring_for_vertices_from_the_corresponding_cycles_in_graph(std::string& graph_in_Dot, const std::vector<std::list<int>>& list_with_simple_cycles)
 {
