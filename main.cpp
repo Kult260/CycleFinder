@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
     if (argc != 3)
     {
         QString text_error = QString::fromStdString("Программа принимает данные на вход в следующей форме: <аргумент запуска программы> <путь к dot файлу с входными данными> <путь к выходному dot файлу>\n");
-        outStream << text_error << flush;
+        outStream << text_error << Qt::flush;
         return 1;
     }
 
@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
         for (const Error& current_error : errors)
         {
             QString text_error = QString::fromStdString(convert_error_to_str(current_error));
-            outStream << text_error << flush;
+            outStream << text_error << Qt::flush;
         }
         return 1;
     }
@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
         for (const Error& current_error : errors)
         {
             QString text_error = QString::fromStdString(convert_error_to_str(current_error));
-            outStream << text_error << flush;
+            outStream << text_error << Qt::flush;
         }
         return 1;
     }
@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
     if ((directed_graph.getListOfSimpleCycles()).empty())
     {
         // Вывести сообщение о том, что граф ациклический и завершить выполнение программы
-        outStream << QString::fromStdString("\nГраф ациклический и не имеет циклов.\n") << flush;
+        outStream << QString::fromStdString("\nГраф ациклический и не имеет циклов.\n") << Qt::flush;
         return 0;
     }
 
@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
         for (const Error& current_error : errors)
         {
             QString text_error = QString::fromStdString(convert_error_to_str(current_error));
-            outStream << text_error << flush;
+            outStream << text_error << Qt::flush;
         }
         return 1;
     }
