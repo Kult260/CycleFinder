@@ -200,3 +200,23 @@ void fill_adjacency_list_of_graph_with_vertex_numbers(
         }
     }
 }
+
+// Функция для замены вершин на их порядковые номера в списках смежности
+std::vector< std::list<int> > replace_vertices_with_their_serial_numbers_in_adjacency_lists(std::map<int, int>& map_of_graph_vertices_and_their_numbers, std::vector< std::list<int> > graph_adjacency_list)
+{
+    // Для каждого списка из списка смежности
+    for (size_t current_list_num = 0; current_list_num < graph_adjacency_list.size(); ++current_list_num)
+    {
+        // Для каждой вершины из текущего списка
+        for (auto iter = graph_adjacency_list[current_list_num].begin(); iter != graph_adjacency_list[current_list_num].end(); iter++)
+        {
+            // Найти текущую вершину в словаре с вершинами и их номерами
+            auto current_vertex_in_map = map_of_graph_vertices_and_their_numbers.find(*iter);
+
+            // Заменить текущую вершину из списка номером, который ей соответствует
+            *iter = current_vertex_in_map->second;
+        }
+    }
+
+    return graph_adjacency_list;
+}
