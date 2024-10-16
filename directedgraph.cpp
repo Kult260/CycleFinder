@@ -42,8 +42,6 @@ void DirectedGraph::findSimpleGraphCycles()
     CircuitFinder CF(graph_adjacency_list_with_vertex_numbers);
     CF.run(list_with_simple_cycles_with_vertex_numbers);
     this->list_with_simple_cycles = replace_vertex_numbers_with_corresponding_vertices_in_adjacency_lists(this->map_of_graph_vertices_and_their_numbers, list_with_simple_cycles_with_vertex_numbers);
-
-
 }
 
 void DirectedGraph::parseGraph()
