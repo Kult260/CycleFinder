@@ -16,6 +16,17 @@
 #include <QString>
 #include <QDebug>
 
+// Функция для удаления всех вхождений символов в строке, указанных в наборе
+void remove_all_occurrences_of_character_in_string(std::string& input_string, std::string characters_to_delete)
+{
+    // Для каждого символа исходной строки
+    for (auto& current_char : characters_to_delete)
+    {
+        // Удалить все вхождения символов из набора
+        input_string.erase(std::remove(input_string.begin(), input_string.end(), current_char), input_string.end());
+    }
+}
+
 // Функция для удаления части строки, находящейся до первого найденного вхождения указанного символа
 void removing_part_of_string_up_to_specified_character(std::string& input_string, const char limit_character)
 {

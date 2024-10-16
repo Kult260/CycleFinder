@@ -23,4 +23,7 @@ void remove_comments_in_string(std::string& input_string);
 // Функция для удаления части строки, находящейся до первого найденного вхождения указанного символа
 void removing_part_of_string_up_to_specified_character(std::string& input_string, const char limit_character);
 
+// Функция для удаления всех вхождений символов в строке, указанных в наборе
+void remove_all_occurrences_of_character_in_string(std::string& input_string, std::string characters_to_delete);
+
 #endif // FUNCTIONS_H
