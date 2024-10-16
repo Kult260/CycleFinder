@@ -17,4 +17,15 @@ enum ErrorType
     INVALID_SAVE_FILE
 };
 
+//Структура, содержащая тип ошибки и строку, в которой она была обнаружена
+struct Error
+{
+    ErrorType type;
+    int line_num = 0;
+
+    bool operator== (const Error &error)  const{
+        return this->type == error.type && this->line_num == error.line_num;
+    }
+};
+
 #endif // STRUCTS_H
