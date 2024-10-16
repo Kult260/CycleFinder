@@ -16,6 +16,26 @@
 #include <QString>
 #include <QDebug>
 
+// Функция для удаления всех разделителей в строке, кроме указанного пользователем в качестве исключения
+void remove_delimiters_in_string(std::string& input_string, char delimiter_being_exception)
+{
+    std::string result_string;
+
+    // Для каждого символа исходной строки
+    for (char current_char : input_string)
+    {
+        // Если текущий символ не является разделителем или текущий символ не равен символу-исключению
+        if (!std::isspace(current_char) || current_char == delimiter_being_exception)
+        {
+            // Добавить текущий символ в результирующую строку
+            result_string += current_char;
+        }
+    }
+
+    // Обновить исходную строку
+    input_string = result_string;
+}
+
 // Функция для удаления всех вхождений символов в строке, указанных в наборе
 void remove_all_occurrences_of_character_in_string(std::string& input_string, std::string characters_to_delete)
 {
