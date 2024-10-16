@@ -1,0 +1,5 @@
+#ifndef DIRECTEDGRAPH_H
+#define DIRECTEDGRAPH_H
+
+
+#endif // DIRECTEDGRAPH_H

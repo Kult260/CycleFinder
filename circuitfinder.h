@@ -1,0 +1,4 @@
+#ifndef CIRCUITFINDER_H
+#define CIRCUITFINDER_H
+
+#endif // CIRCUITFINDER_H
