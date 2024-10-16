@@ -16,6 +16,50 @@
 #include <QString>
 #include <QDebug>
 
+// Функция для составления списка связей, которые повторяются в нескольких циклах
+std::set< std::pair<int, int> > find_repeated_arc_in_cycles(const std::vector< std::list<int> >& list_with_simple_cycles)
+{
+    std::map<std::pair<int, int>, int> edge_count; // список с парами и количеством их в различных циклах
+    std::set< std::pair<int, int> > repeated_edges; // множество многократно повторяющихся пар
+
+    // Для каждого цикла из списка
+    for (const auto& current_cycle : list_with_simple_cycles)
+    {
+        // Сохранить первый элемент цикла
+        auto second_element = current_cycle.begin();
+        auto first_element = second_element;
+
+        // Перейти к следующему элементу цикла
+        ++second_element;
+
+        // Пока не достигнут конец цикла
+        while (second_element != current_cycle.end())
+        {
+            std::pair<int, int> edge = { *first_element, *second_element }; // пара для текущей связи
+
+            // Считать, что пара один раз встретилась в этом цикле и увеличить счетчик для этой пары
+            ++edge_count[edge];
+
+            // Перейти к следующей паре
+            first_element = second_element;
+            ++second_element;
+        }
+    }
+
+    // Для каждой пары связей из словаря с парами связей и их количеством в различных циклах
+    for (const auto& current_pair : edge_count)
+    {
+        // Если связь встречается более одного раза в различных циклах
+        if (current_pair.second > 1)
+        {
+            // Добавить связь в множество повторяющихся связей
+            repeated_edges.insert(current_pair.first);
+        }
+    }
+
+    return repeated_edges;
+}
+
 // Функция для удаления всех символов пропусков, кроме символа переноса строки, не затрагивая однострочные комментарии в описании графа
 void remove_whitespace_except_new_line(std::string& graph_in_Dot)
 {

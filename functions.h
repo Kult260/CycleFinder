@@ -52,4 +52,7 @@ void perform_coloring_for_vertices_from_the_corresponding_cycles_in_graph(std::s
 // Функция для удаления всех символов пропусков, кроме символа переноса строки, не затрагивая однострочные комментарии
 void remove_whitespace_except_new_line(std::string& graph_in_Dot);
 
+// Функция для составления списка связей, которые повторяются в нескольких циклах
+std::set< std::pair<int, int> > find_repeated_arc_in_cycles(const std::vector< std::list<int> >& list_with_simple_cycles);
+
 #endif // FUNCTIONS_H
