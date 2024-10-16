@@ -71,4 +71,7 @@ std::string convert_error_to_str(const Error& error);
 // Функция для проверки текстового описания графа а языке Dot на корректность данных
 void validate_dot_graph_info(const std::string& dot_info, std::vector<Error>& errors);
 
+// Функция для считывания содержимого текстового файла
+bool read_text_file(const std::string& file_path, std::string& text_of_file, std::vector<Error>& errors);
+
 #endif // FUNCTIONS_H

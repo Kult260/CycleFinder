@@ -888,5 +888,29 @@ void validate_dot_graph_info(const std::string& dot_info, std::vector<Error>& er
 
 }
 
+// Функция для считывания содержимого файла с записью графа по указанному пути
+bool read_text_file(const std::string& file_path, std::string& text_of_file, std::vector<Error>& errors)
+{
+
+    QFile file(QString::fromStdString(file_path));
+
+    // Если файл не был открыт
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        // Добавить ошибку в список
+        errors.push_back({ INVALID_OPEN_FILE, 0 });
+        return false;
+    }
+
+    // Считать содержимое файла в строку
+    QTextStream in(&file);
+    QString qtext_of_file;
+    qtext_of_file = in.readAll();
+    text_of_file = qtext_of_file.toStdString();
+
+    file.close();
+    return true;
+}
+
 
 
