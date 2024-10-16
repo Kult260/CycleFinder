@@ -68,4 +68,7 @@ std::vector<size_t> find_comment_positions(const std::string& str);
 // Функция, создающая текстовое представление ошибки для вывода в консоль
 std::string convert_error_to_str(const Error& error);
 
+// Функция для проверки текстового описания графа а языке Dot на корректность данных
+void validate_dot_graph_info(const std::string& dot_info, std::vector<Error>& errors);
+
 #endif // FUNCTIONS_H

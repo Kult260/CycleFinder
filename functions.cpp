@@ -568,4 +568,325 @@ std::string convert_error_to_str(const Error& error)
     return error_text;
 }
 
+void validate_dot_graph_info(const std::string& dot_info, std::vector<Error>& errors)
+{
+    // Считать, что ошибки еще не найдены
+    bool INVALID_KEYWORD_flag = false, INVALID_HEADER_flag = false, INVALID_CURLY_BRACES_flag = false, INVALID_SPACE_BETWEEN_HEADING_AND_CURLY_BRACKET_flag = false,
+        INVALID_COMMUNICATION_BETWEEN_VERTICES_flag = false, INVALID_VERTICE_NAME_OR_SYMBOLS_flag = false, SEMOLON_IS_MISSING_flag = false,
+        INVALID_CONNECTION_SIGN_flag = false, INVALID_SYMBOLS_AFTER_GRAPH_DESCRIPTION_flag = false;
+
+
+    //---------------------------------------------INVAILD_KEYWORD
+    std::string temporary_dot_info = dot_info;
+
+    // Удалить однострочные комментарии из исходной строки
+    remove_comments_in_string(temporary_dot_info);
+
+    // Создать шаблон для проверки корректности ключевого слова и пространства до него
+    static const std::regex correct_keyword(R"rgx(^\s*digraph)rgx");
+
+    // Если текстовое представление графа не соответствует шаблону
+    INVALID_KEYWORD_flag = !(std::regex_search(temporary_dot_info, correct_keyword));
+    if (INVALID_KEYWORD_flag)
+    {
+        // Добавить ошибку в список
+        errors.push_back({ INVALID_KEYWORD, 0 });
+        return;
+    }
+
+    //---------------------------------------------INVAILD_HEADER
+    temporary_dot_info = dot_info;
+
+    // Удалить однострочные комментарии из исходной строки
+    remove_comments_in_string(temporary_dot_info);
+
+    // Создать шаблон для проверки корректности имени графа и пространства до него
+    static const std::regex correct_header(R"(^\s*digraph([ |\t|\v|\r|\f])+([A-Za-z_][\w]*))");
+
+    // Если имя графа не соответствует шаблону
+    INVALID_HEADER_flag = !(std::regex_search(temporary_dot_info, correct_header));
+    if (INVALID_HEADER_flag)
+    {
+        //Добавить ошибку в список
+        errors.push_back({ INVALID_HEADER, 0 });
+        return;
+    }
+
+
+    //---------------------------------------------INVALID_CURLY_BRACES
+    temporary_dot_info = dot_info;
+
+    // Удалить однострочные комментарии из исходной строки
+    remove_comments_in_string(temporary_dot_info);
+
+    int opening_brace = 0;
+    int closing_brace = 0;
+
+    for(auto cur_char : temporary_dot_info)
+    {
+        if(cur_char == '{') opening_brace++;
+        else if (cur_char == '}') closing_brace++;
+    }
+
+    // Если обнаружено несоответствие
+    INVALID_CURLY_BRACES_flag = (opening_brace != 1 || closing_brace != 1);
+    if (INVALID_CURLY_BRACES_flag)
+    {
+        //Добавить ошибку в список
+        errors.push_back({ INVALID_CURLY_BRACES, 0 });
+        return;
+    }
+
+    //---------------------------------------------INVALID_SPACE_BETWEEN_HEADING_AND_CURLY_BRACKET_flag
+
+    // Создать шаблон для проверки пространства между именем графа и открывающей фигурной скобкой
+    static const std::regex correct_space_between_heading_and_curly_bracket(R"(^\s*digraph\s+([A-Za-z_][\w]*)\s*\n+\s*[{]\s*\n+\s*)");
+
+    temporary_dot_info = dot_info;
+
+    remove_comments_in_string(temporary_dot_info);
+
+    // Если проверяемое пространство не соответствует шаблону
+    INVALID_SPACE_BETWEEN_HEADING_AND_CURLY_BRACKET_flag = !(std::regex_search(temporary_dot_info, correct_space_between_heading_and_curly_bracket));
+    if (INVALID_SPACE_BETWEEN_HEADING_AND_CURLY_BRACKET_flag)
+    {
+        // Добавить ошибку в список
+        errors.push_back({ INVALID_SPACE_BETWEEN_HEADING_AND_CURLY_BRACKET, 0 });
+        return;
+    }
+
+
+    //---------------------------------------------INVALID_SYMBOLS_AFTER_GRAPH_DESCRIPTION
+    temporary_dot_info = dot_info;
+
+    // Удалить однострочные комментарии из текстового представления графа
+    remove_comments_in_string(temporary_dot_info);
+
+    // Удалить имя и ключевое слово графа из текстового представления графа
+    removing_part_of_string_up_to_specified_character(temporary_dot_info, '}');
+
+    // Создать шаблон для проверки отсутствия символов (кроме пробельных) после закрывающей фигурной скобки
+    static const std::regex non_symbols_after_count_description(R"(\}\s*$)");
+
+    // Проверить текстовое представление графа на соответствие шаблону
+    INVALID_SYMBOLS_AFTER_GRAPH_DESCRIPTION_flag = !(std::regex_search(temporary_dot_info, non_symbols_after_count_description));
+
+    //Если обнаружено несоответствие
+    if (INVALID_SYMBOLS_AFTER_GRAPH_DESCRIPTION_flag)
+    {
+        // Добавить ошибку в список
+        errors.push_back({ INVALID_SYMBOLS_AFTER_GRAPH_DESCRIPTION, 0 });
+        return;
+    }
+
+
+    //---------------------------------------------INVALID_VERTICE_NAME_OR_SYMBOLS
+    temporary_dot_info = dot_info;
+
+    // Удалить однострочные комментарии из текстового представления графа
+    remove_comments_in_string(temporary_dot_info);
+
+    // Удалить закрывающую фигурную скобку и текст до нее из текстового представления графа
+    temporary_dot_info = temporary_dot_info.substr(0, temporary_dot_info.find("}", 0));
+
+    // Удалить все точки с запятой из текстового представления графа
+    std::string characters_to_delete = ";";
+    remove_all_occurrences_of_character_in_string(temporary_dot_info, characters_to_delete);
+
+    std::stringstream temporary_dot_info_stream_1(temporary_dot_info);
+    std::string current_substr_of_temporary_dot_info;
+
+    // Считать, что нумерация строк будет начинаться с 1
+    int number_of_current_str = 1;
+
+    // Пока в описании графа есть строки и открывающая фигурная скобка не найдена
+    while (std::getline(temporary_dot_info_stream_1, current_substr_of_temporary_dot_info) && current_substr_of_temporary_dot_info.find("{") == std::string::npos)
+    {
+        // Считать строки
+        number_of_current_str++;
+    }
+
+    // Пока в описании графа есть строки
+    while (std::getline(temporary_dot_info_stream_1, current_substr_of_temporary_dot_info))
+    {
+        // посчитать текущую строку
+        number_of_current_str++;
+
+        // Считать, что текщая строка еще не проверена
+        INVALID_VERTICE_NAME_OR_SYMBOLS_flag = false;
+
+        // Для каждого символа текущей строки
+        for (auto current_char : current_substr_of_temporary_dot_info)
+        {
+            // Если текущий символ не является допустимым в строке со связями
+            if (!isspace(current_char) && !isdigit(current_char) && current_char != '-' && current_char != '>' && INVALID_VERTICE_NAME_OR_SYMBOLS_flag == false)
+            {
+                // Считать, что ошибка найдена
+                INVALID_VERTICE_NAME_OR_SYMBOLS_flag = true;
+            }
+        }
+
+        // Если ошибка найдена
+        if (INVALID_VERTICE_NAME_OR_SYMBOLS_flag)
+        {
+            // Добавить ошибку в список
+            errors.push_back({ INVALID_VERTICE_NAME_OR_SYMBOLS, number_of_current_str });
+            return;
+        }
+
+    }
+
+    //---------------------------------------------INVALID_COMMUNICATION_BETWEEN_VERTICES, INVALID_CONNECTION_SIGN
+    temporary_dot_info = dot_info;
+
+    // Удалить однострочные комментарии из текстового представления графа
+    remove_comments_in_string(temporary_dot_info);
+
+    // Удалить закрывающую фигурную скобку и текст до нее из текстового представления графа
+    temporary_dot_info = temporary_dot_info.substr(0, temporary_dot_info.find("}", 0));
+
+    // Удалить все точки с запятой из текстового представления графа
+    characters_to_delete = ";";
+    remove_all_occurrences_of_character_in_string(temporary_dot_info, characters_to_delete);
+
+    std::stringstream temporary_dot_info_stream(temporary_dot_info);
+
+    //Считать, что нумерация строк будет начинаться с 1
+    number_of_current_str = 1;
+
+    // Пока в описании графа есть строки и открывающая фигурная скобка не найдена
+    while (std::getline(temporary_dot_info_stream, current_substr_of_temporary_dot_info) && current_substr_of_temporary_dot_info.find("{") == std::string::npos)
+    {
+        // Считать строки
+        number_of_current_str++;
+
+
+    }
+
+    //Переменные для подсчета не пробельных символов строки
+    int count_num;
+    int count_arr;
+    int count_dash;
+    bool inNumber;
+
+    // Пока в текстовом описании графа есть строки
+    while (std::getline(temporary_dot_info_stream, current_substr_of_temporary_dot_info))
+    {
+        // Посчитать текущую строку
+        number_of_current_str++;
+
+        //Считать не пробельные символы
+        count_num = 0;
+        count_arr = 0;
+        count_dash = 0;
+        inNumber = false;
+        for (char current_char : current_substr_of_temporary_dot_info) {
+            if (isdigit(current_char)) {
+                if (!inNumber) {
+                    inNumber = true;
+                    ++count_num;
+                }
+            } else {
+                inNumber = false;
+            }
+
+            if(current_char == '-')
+            {
+                count_dash++;
+            }
+
+            if(current_char == '>')
+            {
+                count_arr++;
+            }
+        }
+
+        if(count_num > 2)
+        {
+            INVALID_COMMUNICATION_BETWEEN_VERTICES_flag = true;
+
+        }
+
+        else if((count_dash > 1 || count_arr > 1) && ((count_dash + count_arr) % 2 == 0 ))
+        {
+            INVALID_COMMUNICATION_BETWEEN_VERTICES_flag = true;
+
+        }
+
+        else if(count_num == 2 && (((count_dash + count_arr) % 2 != 0) || (count_dash + count_arr == 0)))
+        {
+            //Считать,  что ошибка найдена
+            INVALID_CONNECTION_SIGN_flag = true;
+        }
+
+
+        // Если текущая строка содержит ошибку
+        if(INVALID_COMMUNICATION_BETWEEN_VERTICES_flag)
+        {
+            // Добавить ошибку в список
+            errors.push_back({ INVALID_COMMUNICATION_BETWEEN_VERTICES, number_of_current_str });
+            return;
+        }
+
+        // Если ошибка найдена
+        if (INVALID_CONNECTION_SIGN_flag)
+        {
+            // Добавить ошибку в список
+            errors.push_back({ INVALID_CONNECTION_SIGN, number_of_current_str });
+            return;
+        }
+
+    }
+
+    //---------------------------------------------SEMOLON_IS_MISSING
+    temporary_dot_info = dot_info;
+
+    // Удалить однострочные комментарии из текстового представления графа
+    remove_comments_in_string(temporary_dot_info);
+
+    // Удалить закрывающую фигурную скобку и текст до нее из текстового представления графа
+    temporary_dot_info = temporary_dot_info.substr(0, temporary_dot_info.find("}", 0));
+
+    std::stringstream temporary_dot_info_stream_2(temporary_dot_info);
+
+    // Считать, что нумерация строк будет начинаться с 1
+    number_of_current_str = 1;
+
+    // Пока в описании графа есть строки и открывающая фигурная скобка не найдена
+    while (std::getline(temporary_dot_info_stream_2, current_substr_of_temporary_dot_info) && current_substr_of_temporary_dot_info.find("{") == std::string::npos)
+    {
+        // Считать строки
+        number_of_current_str++;
+    }
+
+    // Пока в описании графа есть строки
+    while (std::getline(temporary_dot_info_stream_2, current_substr_of_temporary_dot_info))
+    {
+        // Посчитать текущую строку
+        number_of_current_str++;
+
+        //Считать текущую строку еще не проверенной
+        SEMOLON_IS_MISSING_flag = false;
+
+        // Если в текущей строке есть вершина и символ точки с запятой встречается не один раз
+        if (current_substr_of_temporary_dot_info.find_first_of("0123456789") != std::string::npos &&
+            !(std::count(current_substr_of_temporary_dot_info.begin(), current_substr_of_temporary_dot_info.end(), ';') == 1))
+        {
+            // Считать, что в текущей строке обнаружена ошибка
+            SEMOLON_IS_MISSING_flag = true;
+        }
+
+        // Если обнаружена ошибка
+        if (SEMOLON_IS_MISSING_flag)
+        {
+            // Добавить ошибку в список
+            errors.push_back({ SEMOLON_IS_MISSING, number_of_current_str });
+            return;
+        }
+
+    }
+
+}
+
+
 
