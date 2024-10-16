@@ -20,4 +20,7 @@ void bring_graph_record_into_format_convenient_obtaining_data(std::string& tempo
 // Функция для удаления однострочных комментариев в строке
 void remove_comments_in_string(std::string& input_string);
 
+// Функция для удаления части строки, находящейся до первого найденного вхождения указанного символа
+void removing_part_of_string_up_to_specified_character(std::string& input_string, const char limit_character);
+
 #endif // FUNCTIONS_H

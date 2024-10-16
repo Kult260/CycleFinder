@@ -16,6 +16,17 @@
 #include <QString>
 #include <QDebug>
 
+// Функция для удаления части строки, находящейся до первого найденного вхождения указанного символа
+void removing_part_of_string_up_to_specified_character(std::string& input_string, const char limit_character)
+{
+    // Для каждого символа исходной строки
+    for (auto current_symbol = input_string.begin(); *current_symbol != limit_character; current_symbol)
+    {
+        // Удалить часть строки, до указанного текущего символа
+        current_symbol = input_string.erase(current_symbol);
+    }
+}
+
 // Функция для удаления однострочных комментариев в строке
 void remove_comments_in_string(std::string& input_string)
 {
