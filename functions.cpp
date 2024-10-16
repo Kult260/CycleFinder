@@ -912,5 +912,34 @@ bool read_text_file(const std::string& file_path, std::string& text_of_file, std
     return true;
 }
 
+// Функция для записи исходной строки в файл
+bool write_text_to_file(const std::string& file_path, const std::string& text_to_write, std::vector<Error>& errors)
+{
+
+    QFile file(QString::fromStdString(file_path));
+
+    // Если файл не был открыт
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        // Добавить ошибку в список
+        errors.push_back({ INVALID_SAVE_FILE, 0 });
+        return false;
+    }
+
+    // Записать входную строку в файл
+    QTextStream out(&file);
+    out << QString::fromStdString(text_to_write);
+
+    // Если файл не удалось закрыть
+    file.close();
+    if (file.error() != QFile::NoError)
+    {
+        // Добавить ошибку в список
+        errors.push_back({ INVALID_SAVE_FILE, 0 });
+        return false;
+    }
+
+    return true;
+}
 
 

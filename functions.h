@@ -74,4 +74,7 @@ void validate_dot_graph_info(const std::string& dot_info, std::vector<Error>& er
 // Функция для считывания содержимого текстового файла
 bool read_text_file(const std::string& file_path, std::string& text_of_file, std::vector<Error>& errors);
 
+// Функция для записи исходной строки в файл
+bool write_text_to_file(const std::string& file_path, const std::string& string_to_write, std::vector<Error>& errors);
+
 #endif // FUNCTIONS_H
