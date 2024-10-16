@@ -16,6 +16,27 @@
 #include <QString>
 #include <QDebug>
 
+// Функция для нахождения всех позиций начала однострочных комментариев
+std::vector<size_t> find_comment_positions(const std::string& input_str)
+{
+    std::vector<size_t> positions;
+
+    //Найти начало однострочного комментария в строке
+    size_t pos = input_str.find("//");
+
+    // Пока в исходной строке еще есть однострочные комментарии
+    while (pos != std::string::npos)
+    {
+        // Добавить в список позиций однострочных комментариев новую найденную позицию
+        positions.push_back(pos);
+
+        // Найти начало следующего однострочного комментария в еще не проверенной части строки
+        pos = input_str.find("//", pos + 2);
+    }
+
+    return positions;
+}
+
 // Функция для проверки принадлежности определенной части строки к однострочному комментарию
 bool is_part_of_single_line_comment(const std::string& input_str, size_t end_pos)
 {

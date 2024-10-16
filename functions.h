@@ -61,4 +61,7 @@ size_t searching_for_substring_that_is_not_comment(const std::string& str, const
 // Функция для проверки принадлежности определенной части строки к однострочному комментарию
 bool is_part_of_single_line_comment(const std::string& str, size_t end_pos);
 
+// Функция для нахождения всех позиций начала однострочных комментариев
+std::vector<size_t> find_comment_positions(const std::string& str);
+
 #endif // FUNCTIONS_H
