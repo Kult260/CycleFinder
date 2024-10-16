@@ -16,6 +16,46 @@
 #include <QString>
 #include <QDebug>
 
+// Функция для проверки принадлежности определенной части строки к однострочному комментарию
+bool is_part_of_single_line_comment(const std::string& input_str, size_t end_pos)
+{
+    // Найти позиции всех однострочных комментариев, присутствующих в строке
+    std::vector<size_t> comment_positions = find_comment_positions(input_str);
+
+    // Считать, что начало подстроки, которую нужно проверить, является ее концом
+    size_t start_pos = end_pos;
+
+    // Пока не достигнут символ переноса строки и начальная позиция не является началом исходной строки и комментарием
+    while ((input_str[start_pos] != '\n' && input_str[start_pos] != '/') && start_pos != 0)
+    {
+        //Сместиться по строке левее на один символ
+        start_pos--;
+    }
+
+    // Для каждого комментария из списка позиций со всеми однострочными комментариями
+    for (size_t comment_pos : comment_positions)
+    {
+        // Найти конец для текущего комментария
+        size_t comment_end = input_str.find('\n', comment_pos);
+
+        // Если конец комментария найден
+        if (comment_end == std::string::npos)
+        {
+            // Считать, что позиция конца комментария равна длине исходной строки
+            comment_end = input_str.length();
+        }
+
+        // Если часть строки, которую требуется проверить, находится в комменарии
+        if (start_pos >= comment_pos && end_pos <= comment_end)
+        {
+            // Считать, что строка принадлежит комментарию
+            return true;
+        }
+    }
+
+    return false;
+}
+
 // Функция для поиска конца подстроки, которая не является однострочным комментарием
 size_t searching_for_substring_that_is_not_comment(const std::string& input_str, const std::string& substr, size_t start_pos)
 {

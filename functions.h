@@ -58,4 +58,7 @@ std::set< std::pair<int, int> > find_repeated_arc_in_cycles(const std::vector< s
 // Функция для поиска конца подстроки, которая не является однострочным комментарием
 size_t searching_for_substring_that_is_not_comment(const std::string& str, const std::string& substr, size_t start_pos);
 
+// Функция для проверки принадлежности определенной части строки к однострочному комментарию
+bool is_part_of_single_line_comment(const std::string& str, size_t end_pos);
+
 #endif // FUNCTIONS_H
