@@ -16,6 +16,19 @@
 #include <QString>
 #include <QDebug>
 
+// Функция для удаления однострочных комментариев в строке
+void remove_comments_in_string(std::string& input_string)
+{
+    // Создать шаблон для поиска комментария
+    std::regex commentRegex("//.*");
+
+    // Заменить все подстроки, соответствующие шаблону комментария, на пустые подстроки
+    std::string result = std::regex_replace(input_string, commentRegex, "");
+
+    // Обновить исходную строку
+    input_string = result;
+}
+
 // Функция, приводящая запись графа на языке Dot к удобному для получения данных формату
 void bring_graph_record_into_format_convenient_obtaining_data(std::string& temporary_graph_in_Dot)
 {

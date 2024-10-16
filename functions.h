@@ -17,4 +17,7 @@
 // Функция, приводящая запись графа на языке Dot к удобному для получения данных формату
 void bring_graph_record_into_format_convenient_obtaining_data(std::string& temporary_graph_in_Dot);
 
+// Функция для удаления однострочных комментариев в строке
+void remove_comments_in_string(std::string& input_string);
+
 #endif // FUNCTIONS_H
