@@ -34,4 +34,10 @@ void create_map_with_vertices_of_graphand_their_numbers(std::string& text_wit_va
 // Функция, для составления словаря с вершинами графа и их порядковыми номерами из списка дуг графа
 void fill_map_with_values_and_their_numbers(std::map<int, int>& map_of_graph_vertices_and_their_numbers, std::vector< std::pair<int, int> >& graph_arc_list);
 
+// Функция для заполнения списка смежности номерами вершин графа
+void fill_adjacency_list_of_graph_with_vertex_numbers(
+    const std::map<int, int>& map_of_graph_vertices_and_their_numbers,
+    const std::vector<std::pair<int, int>>& graph_arc_list,
+    std::vector<std::list<int>>& graph_adjacency_list);
+
 #endif // FUNCTIONS_H

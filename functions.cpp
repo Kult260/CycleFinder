@@ -156,5 +156,47 @@ void fill_map_with_values_and_their_numbers(std::map<int, int>& map_of_graph_ver
         // Присвоить текущей вершине соответствующий порядковый номер
         current_vertex.second = current_number++;
     }
+}
 
+// Функция для заполнения списка смежности номерами вершин графа
+void fill_adjacency_list_of_graph_with_vertex_numbers(
+    const std::map<int, int>& map_of_graph_vertices_and_their_numbers,
+    const std::vector<std::pair<int, int>>& graph_arc_list,
+    std::vector<std::list<int>>& graph_adjacency_list)
+{
+
+    // Найти размер словаря с вершинами и их порядковыми номерами
+    int size = map_of_graph_vertices_and_their_numbers.size();
+
+    // Ограничить размер создаваемого списка смежности по размеру словаря (по количеству вершин графа)
+    graph_adjacency_list.resize(size);
+
+    // Для каждой дуги из списка дуг
+    for (const auto& current_arc : graph_arc_list)
+    {
+        // Считать первой вершиной первое значение, задающее дугу
+        int vertex1 = current_arc.first;
+
+        // Считать второй вершиной второе значение, задающее дугу
+        int vertex2 = current_arc.second;
+
+        // Получить первую вершину с ее номером из словаря
+        auto vertex_with_num1 = map_of_graph_vertices_and_their_numbers.find(vertex1);
+
+        // Получить вторую вершину с ее номером из словаря
+        auto vertex_with_num2 = map_of_graph_vertices_and_their_numbers.find(vertex2);
+
+        // Если найденные элементы словаря не являются одновременно последними
+        if (vertex_with_num1 != map_of_graph_vertices_and_their_numbers.end() && vertex_with_num2 != map_of_graph_vertices_and_their_numbers.end())
+        {
+            // Получить номер первой вершины
+            int num1 = vertex_with_num1->second;
+
+            // Получить значение второй вершины
+            int num2 = vertex_with_num2->first;
+
+            // Добавить значение вершины назначения (второй) в список смежности для вершины источника (первой)
+            graph_adjacency_list[num1 - 1].push_back(num2);
+        }
+    }
 }
