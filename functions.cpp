@@ -130,3 +130,31 @@ void create_map_with_vertices_of_graphand_their_numbers(std::string& text_wit_va
         }
     }
 }
+
+// Функция, для составления словаря с вершинами графа и их порядковыми номерами из списка дуг графа
+void fill_map_with_values_and_their_numbers(std::map<int, int>& map_of_graph_vertices_and_their_numbers, std::vector< std::pair<int, int> >& graph_arc_list)
+{
+    // Считать, что подсчет вершин будет начинаться с единицы
+    int current_number = 1;
+
+    // Для каждой дуги из спика с дугами графа
+    for (const auto& current_arc : graph_arc_list)
+    {
+        // Добавить в словарь первую вершину в качестве ключа
+        map_of_graph_vertices_and_their_numbers[current_arc.first] = 0;
+
+        // Добавить в словарь вторую вершину в качестве ключа
+        map_of_graph_vertices_and_their_numbers[current_arc.second] = 0;
+    }
+
+    // Удалить "нулевые" вершины из словаря
+    map_of_graph_vertices_and_their_numbers.erase(0);
+
+    // Для каждой вершины из словаря
+    for (auto& current_vertex : map_of_graph_vertices_and_their_numbers)
+    {
+        // Присвоить текущей вершине соответствующий порядковый номер
+        current_vertex.second = current_number++;
+    }
+
+}

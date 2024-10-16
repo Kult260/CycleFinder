@@ -31,5 +31,7 @@ void remove_delimiters_in_string(std::string& input_string, char delimiter_being
 // Функция для парсинга текста из строк с парами числовых значений, разделенных указанным разделителем
 void create_map_with_vertices_of_graphand_their_numbers(std::string& text_wit_value_pairs, std::string& separator_between_values, std::vector< std::pair<int, int> >& vector_with_value_pairs);
 
+// Функция, для составления словаря с вершинами графа и их порядковыми номерами из списка дуг графа
+void fill_map_with_values_and_their_numbers(std::map<int, int>& map_of_graph_vertices_and_their_numbers, std::vector< std::pair<int, int> >& graph_arc_list);
 
 #endif // FUNCTIONS_H
