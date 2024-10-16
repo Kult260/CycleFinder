@@ -320,7 +320,7 @@ void remove_all_occurrences_of_character_in_string(std::string& input_string, st
 void removing_part_of_string_up_to_specified_character(std::string& input_string, const char limit_character)
 {
     // Для каждого символа исходной строки
-    for (auto current_symbol = input_string.begin(); *current_symbol != limit_character; current_symbol)
+    for (auto current_symbol = input_string.begin(); *current_symbol != limit_character;)
     {
         // Удалить часть строки, до указанного текущего символа
         current_symbol = input_string.erase(current_symbol);
