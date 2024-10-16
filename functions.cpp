@@ -109,10 +109,8 @@ size_t searching_for_substring_that_is_not_comment(const std::string& input_str,
         }
     }
 
-    else
-    {
-        return std::string::npos;
-    }
+    return std::string::npos;
+
 }
 
 // Функция для составления списка связей, которые повторяются в нескольких циклах
