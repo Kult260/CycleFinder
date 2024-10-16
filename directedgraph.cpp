@@ -1,5 +1,6 @@
 #include "circuitfinder.h"
 #include "directedgraph.h"
+#include "functions.h"
 #include <iostream>
 #include <string>
 #include <vector>

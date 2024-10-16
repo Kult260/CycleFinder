@@ -87,3 +87,46 @@ void bring_graph_record_into_format_convenient_obtaining_data(std::string& tempo
     // Удалить все лишние пробелы, кроме символа переноса строки, из исходной строки
     remove_delimiters_in_string(characters_to_delete, '\n');
 }
+
+// Функция для парсинга текста из строк с парами числовых значений, разделенных указанным разделителем
+void create_map_with_vertices_of_graphand_their_numbers(std::string& text_wit_value_pairs, std::string& separator_between_values, std::vector< std::pair<int, int> >& vector_with_value_pairs)
+{
+    //Создать строковый поток для исходной строки
+    std::stringstream temporary_text_stream(text_wit_value_pairs);
+
+    //Создать временную строку для записи подстрок из потока
+    std::string temporary_text;
+
+    // Пока из строкового потока можно получать подстроки
+    while (std::getline(temporary_text_stream, temporary_text))
+    {
+        // Найти позицию указанного разделителя
+        size_t separator_position = temporary_text.find(separator_between_values);
+
+        //Найти позицию первого вхождения символа, являющегося числом
+        size_t num_position = temporary_text.find_first_of("0123456789");
+
+        //Если позиция разделителя найдена
+        if (separator_position != std::string::npos)
+        {
+            // Считать значение до найденного разделителя из временной строки
+            int value1 = std::stoul(temporary_text.substr(0, separator_position));
+
+            // Считать значение после найденного разделителя из временной строки
+            int value2 = std::stoul(temporary_text.substr(separator_position + separator_between_values.size()));
+
+            //Записать найденную пару значений в список с парами значений
+            vector_with_value_pairs.emplace_back(value1, value2);
+        }
+
+        // Иначе если позиция первого заначения найдена
+        else if (num_position != std::string::npos)
+        {
+            // Считать найденное значение из временной строки
+            int value1 = std::stoul(temporary_text.substr(num_position));
+
+            //Записать найденное значение в список с парами значений, считая, что второе значение осутствует
+            vector_with_value_pairs.emplace_back(value1, 0);
+        }
+    }
+}

@@ -28,4 +28,8 @@ void remove_all_occurrences_of_character_in_string(std::string& input_string, st
 // Функция для удаления всех разделителей в строке, кроме указанного пользователем в качестве исключения
 void remove_delimiters_in_string(std::string& input_string, char delimiter_being_exception);
 
+// Функция для парсинга текста из строк с парами числовых значений, разделенных указанным разделителем
+void create_map_with_vertices_of_graphand_their_numbers(std::string& text_wit_value_pairs, std::string& separator_between_values, std::vector< std::pair<int, int> >& vector_with_value_pairs);
+
+
 #endif // FUNCTIONS_H
