@@ -16,6 +16,84 @@
 #include <QString>
 #include <QDebug>
 
+// Функция, выполняющая покраску для связей из соответствующих циклов в указанном графе
+void perform_coloring_for_vertices_from_the_corresponding_cycles_in_graph(std::string& graph_in_Dot, const std::vector<std::list<int>>& list_with_simple_cycles)
+{
+    std::vector< std::string > color_list = { "#FF00FF", "#800080", "#FF0000", "#800000", "#FFFF00",  "#808000",  "#00FF00",  "#008000",  "#00FFFF",
+                                           "#008080",  "#0000FF",  "#000080",  "#D2691E",  "#FF4500", "#00FF7F", "#DEB887"};
+
+    //Удалить все разделители из описания графа, не меняя содержимого однострочных комментариев
+    remove_whitespace_except_new_line(graph_in_Dot);
+
+    // Составить список связей, которые принадлежат нескольким простым циклам одновременно
+    std::set< std::pair<int, int> > repeated_arc = find_repeated_arc_in_cycles(list_with_simple_cycles);
+
+    // Для каждой связи (дуги) из списка с повторяющимися связями
+    for (const auto& current_arc : repeated_arc)
+    {
+        // Создать подстроку для поиска связи из списка
+        std::string substring_with_arc = std::to_string(current_arc.first) + "->" + std::to_string(current_arc.second);
+
+        // Найти связь и место для вставки метки о цвете в описании графа
+        size_t place_insert = searching_for_substring_that_is_not_comment(graph_in_Dot, substring_with_arc, 0);
+
+        //Вставить метку о цвете на найденную позицию
+        graph_in_Dot.insert(place_insert, "[color=\"#808080\"]");
+    }
+
+
+    //Считать, номер цвета из списка цветов еще не определенным
+    size_t number_current_color = -1;
+
+    //Для каждого цикла из списка простых циклов
+    for (const auto& current_cycle : list_with_simple_cycles)
+    {
+        // Сохранить первый элемент цикла
+        auto second_element = current_cycle.begin();
+        auto first_element = second_element;
+
+        // Перейти к следующему элементу цикла
+        ++second_element;
+
+        // Если номер цвета не вышел за пределы списка
+        if (color_list.size()-1 != number_current_color)
+        {
+            // Выбрать следующий доступный номер цвета
+            number_current_color++;
+        }
+        // Иначе
+        else
+        {
+            // Установить номер цвета на первый цвет в списке
+            number_current_color = 0;
+        }
+
+        //Пока текущий цикл графа не пройден полностью
+        while (second_element != current_cycle.end())
+        {
+            // Составить текущую пару (связь) из цикла
+            std::pair<int, int> arc = { *first_element, *second_element };
+
+            // Если текущая связь (дуга) не принадлежит списку повторяющихся связей
+            if (repeated_arc.find(arc) == repeated_arc.end())
+            {
+                // Создать подстроку для поиска связи
+                std::string substring_with_arc = std::to_string(arc.first) + "->" + std::to_string(arc.second);
+
+                // Найти связь и место для вставки метки о цвете в описании графа
+                size_t place_insert = searching_for_substring_that_is_not_comment(graph_in_Dot, substring_with_arc, 0);
+
+                // Вставить метку о цвете на найденную позицию
+                graph_in_Dot.insert(place_insert, "[color=\"" + color_list[number_current_color] + "\"]");
+            }
+
+            // Перееститься на еще не пройденную связь текущего цикла
+            first_element = second_element;
+            ++second_element;
+        }
+    }
+}
+
 // Функция для удаления всех разделителей в строке, кроме указанного пользователем в качестве исключения
 void remove_delimiters_in_string(std::string& input_string, char delimiter_being_exception)
 {
@@ -249,6 +327,6 @@ std::vector< std::list<int> > replace_vertex_numbers_with_corresponding_vertices
     }
 
     return graph_adjacency_list_with_vertex_numbers;
-
 }
+
 

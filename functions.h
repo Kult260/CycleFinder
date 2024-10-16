@@ -46,4 +46,7 @@ std::vector< std::list<int> > replace_vertices_with_their_serial_numbers_in_adja
 // Функция для замены номеров вершин на соответствующие вершины в списках смежности
 std::vector< std::list<int> > replace_vertex_numbers_with_corresponding_vertices_in_adjacency_lists(std::map<int, int>& map_of_graph_vertices_and_their_numbers, std::vector< std::list<int> > graph_adjacency_list_with_vertex_numbers);
 
+// Функция, выполняющая покраску для связей из соответствующих циклов в указанном графе
+void perform_coloring_for_vertices_from_the_corresponding_cycles_in_graph(std::string& graph_in_Dot, const std::vector<std::list<int>>& list_with_simple_cycles);
+
 #endif // FUNCTIONS_H
