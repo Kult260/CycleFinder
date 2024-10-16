@@ -43,5 +43,7 @@ void fill_adjacency_list_of_graph_with_vertex_numbers(
 // Функция для замены вершин на их порядковые номера в списках смежности
 std::vector< std::list<int> > replace_vertices_with_their_serial_numbers_in_adjacency_lists(std::map<int, int>& map_of_graph_vertices_and_their_numbers, std::vector< std::list<int> > graph_adjacency_list);
 
+// Функция для замены номеров вершин на соответствующие вершины в списках смежности
+std::vector< std::list<int> > replace_vertex_numbers_with_corresponding_vertices_in_adjacency_lists(std::map<int, int>& map_of_graph_vertices_and_their_numbers, std::vector< std::list<int> > graph_adjacency_list_with_vertex_numbers);
 
 #endif // FUNCTIONS_H

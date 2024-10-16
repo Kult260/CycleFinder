@@ -220,3 +220,35 @@ std::vector< std::list<int> > replace_vertices_with_their_serial_numbers_in_adja
 
     return graph_adjacency_list;
 }
+
+// Функция для замены номеров вершин на соответствующие вершины в списках смежности
+std::vector< std::list<int> > replace_vertex_numbers_with_corresponding_vertices_in_adjacency_lists(std::map<int, int>& map_of_graph_vertices_and_their_numbers, std::vector< std::list<int> > graph_adjacency_list_with_vertex_numbers)
+{
+
+    std::map<int, int> swapped_map_of_graph_vertices_and_their_numbers;
+
+    // Для каждой пары из словаря с вершинами и их номерами
+    for (const auto& current_pair : map_of_graph_vertices_and_their_numbers)
+    {
+        // Поменять местами вершины и номера
+        swapped_map_of_graph_vertices_and_their_numbers[current_pair.second] = current_pair.first;
+    }
+
+    // Для каждого списка из списка смежностей, состоящего из номеров вершин
+    for (size_t current_list_num = 0; current_list_num < graph_adjacency_list_with_vertex_numbers.size(); ++current_list_num)
+    {
+        // Для каждой вершины из текущего списка
+        for (auto iter = graph_adjacency_list_with_vertex_numbers[current_list_num].begin(); iter != graph_adjacency_list_with_vertex_numbers[current_list_num].end(); iter++)
+        {
+            // Найти текущую вершину в словаре с вершинами и их номерами
+            auto current_vertex_in_map = swapped_map_of_graph_vertices_and_their_numbers.find(*iter);
+
+            // Заменить текущую вершину из списка номером, который ей соответствует
+            *iter = current_vertex_in_map->second;
+        }
+    }
+
+    return graph_adjacency_list_with_vertex_numbers;
+
+}
+
